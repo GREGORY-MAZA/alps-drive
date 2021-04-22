@@ -1,7 +1,7 @@
 const fs = require('fs/promises') // fs devient un objet
 
-function listFolder() {
-    const readPromise = fs.readdir('.', { withFileTypes: true })
+function listFolder(name) {
+    const readPromise = fs.readdir(name, { withFileTypes: true })
     const transformResultPromise = readPromise.then((dirents) => {
         const alpsDriveFiles = []
         dirents.forEach(dirent => {
@@ -26,10 +26,13 @@ function deleteFolder(name) {
     return myDeleteFolderPromise
 }
 
-function isFileOrFolder(name) {
-    const isFileOrFolderPromise = fs.stat(name) // Donne les infos
-    console.log(isFileOrFolderPromise)
-    return isFileOrFolderPromise
+function isFile(name) {
+    const isFilePromise = fs.stat(name) // Donne les infos
+    console.log(isFilePromise)
+    return isFilePromise.then((response) => {
+        response.isFile()
+        return response.isFile()
+    })
 }
 
 function displayContent(name) {
@@ -45,6 +48,6 @@ module.exports = { //création d'objet
     functionListFolder: listFolder, // le nom de la fonction : la fonction
     functionCreateFolder: createFolder,
     functionDeleteFolder: deleteFolder,
-    functionisFileOrFolder: isFileOrFolder,
+    functionisFile: isFile,
     functionDisplayContent: displayContent
 }

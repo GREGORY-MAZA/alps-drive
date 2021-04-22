@@ -8,7 +8,7 @@ const port = 3000 // déclaration d'une variable port avec comme valeur 3000
 app.use(express.static('frontend')) // express.static est une fonction intégré dans express 
 
 app.get('/api/drive', (req, res) => {
-    const myFilesPromise = drive.functionListFolder('/') // appel de la fonction de cet objet (drive)
+    const myFilesPromise = drive.functionListFolder('.') // appel de la fonction de cet objet (drive)
     myFilesPromise.then((myFiles) => {
         console.log(myFiles)
         res.send(myFiles)
@@ -40,14 +40,22 @@ app.delete('/api/drive/:name', (req, res) => {
 
 app.get('/api/drive/:name', (req, res) => {
     const name = req.params.name
-    const isFileorFolder = drive.functionisFileOrFolder(name)
-    isFileorFolder.then((isFile) => {
+    const isFilePromise = drive.functionisFile(name)
+    isFilePromise.then((isFile) => {
+        console.log(isFile)
         if (isFile) {
             let file = drive.functionDisplayContent(name);
             file.then((name) => {
                 res.send(name)
 
             })
+        } else {
+            const myFilesPromise = drive.functionListFolder(name) // appel de la fonction de cet objet (drive)
+            myFilesPromise.then((myFiles) => {
+                console.log(myFiles)
+                res.send(myFiles)
+            })
+
         }
 
     })
